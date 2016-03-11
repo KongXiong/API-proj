@@ -46,7 +46,7 @@ namespace API_Proj.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Firstname,Lastname,Address,City,ZipCode,Email")] Client client)
+        public ActionResult Create([Bind(Include = "ID,Firstname,Lastname,Address,City,State,ZipCode,Email")] Client client)
         {
             if (ModelState.IsValid)
             {
@@ -78,7 +78,7 @@ namespace API_Proj.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Firstname,Lastname,Address,City,ZipCode,Email")] Client client)
+        public ActionResult Edit([Bind(Include = "ID,Firstname,Lastname,Address,City,State,ZipCode,Email")] Client client)
         {
             if (ModelState.IsValid)
             {

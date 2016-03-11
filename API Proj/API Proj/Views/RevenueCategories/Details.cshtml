@@ -1,4 +1,4 @@
-﻿@model API_Proj.Models.Revenue
+﻿@model API_Proj.Models.RevenueCategory
 
 @{
     ViewBag.Title = "Details";
@@ -7,23 +7,23 @@
 <h2>Details</h2>
 
 <div>
-    <h4>Revenue</h4>
+    <h4>RevenueCategory</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Client.Firstname)
+            @Html.DisplayNameFor(model => model.Revenue.ID)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Client.Firstname)
+            @Html.DisplayFor(model => model.Revenue.ID)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.RegisteredUser.Firstname)
+            @Html.DisplayNameFor(model => model.Name)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.RegisteredUser.Firstname)
+            @Html.DisplayFor(model => model.Name)
         </dd>
 
         <dt>
@@ -32,14 +32,6 @@
 
         <dd>
             @Html.DisplayFor(model => model.Total)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Date)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Date)
         </dd>
 
     </dl>

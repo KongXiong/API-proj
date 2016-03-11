@@ -7,131 +7,128 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using API_Proj.Models;
-using Microsoft.AspNet.Identity;
 
 namespace API_Proj.Controllers
 {
-    public class RevenuesController : Controller
+    public class RevenueCategoriesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Revenues
+        // GET: RevenueCategories
         public ActionResult Index()
         {
-            var revenues = db.Revenues.Include(r => r.Client).Include(r => r.RegisteredUser);
-            return View(revenues.ToList());
+            var revenueCategories = db.RevenueCategories.Include(r => r.Revenue);
+            return View(revenueCategories.ToList());
         }
 
-        // GET: Revenues/Details/5
+        // GET: RevenueCategories/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Revenue revenue = db.Revenues.Find(id);
-            if (revenue == null)
+            RevenueCategory revenueCategory = db.RevenueCategories.Find(id);
+            if (revenueCategory == null)
             {
                 return HttpNotFound();
             }
-            return View(revenue);
+            return View(revenueCategory);
         }
 
-        // GET: Revenues/Create
+        // GET: RevenueCategories/Create
         public ActionResult Create()
         {
-            ViewBag.ClientID = new SelectList(db.Clients, "ID", "Firstname");
-
-
-            ViewBag.RegisteredUserID = User.Identity.GetUserId();
-            //ViewBag.RegisteredUserID = 1;
+            ViewBag.RevenueID = new SelectList(db.Revenues, "ID", "ID");
             return View();
         }
 
-        // POST: Revenues/Create
+        // POST: RevenueCategories/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Total,Date,RegisteredUserID,ClientID")] Revenue revenue)
+        public ActionResult Create([Bind(Include = "ID,Name,Total,RevenueID")] RevenueCategory revenueCategory)
         {
             if (ModelState.IsValid)
             {
-                //var thing = revenue.RegisteredUserID;
-                //var UserID = Convert.ToInt32(User.Identity.GetUserId().Single());
-                //var foo = db.RegisteredUsers.Where(x => x.ID == UserID);
+                var revId = revenueCategory.Revenue.ID;
 
-                //revenue.RegisteredUserID = ViewBag.RegisteredUserID;
-                revenue.RegisteredUserID = User.Identity.GetUserId();
-                
-                db.Revenues.Add(revenue);
+    //            var user = db.Users.Where(u => u.ID == id)
+    //.Select(u => new {
+    //    ID = u.ID,
+    //    FirstName = u.FirstName,
+    //    LastName = u.LastName,
+    //    FotherName = u.FotherName
+    //}).Single();
+
+
+
+                revenueCategory.RevenueID = revenueCategory.Revenue.ID;
+                db.RevenueCategories.Add(revenueCategory);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ClientID = new SelectList(db.Clients, "ID", "Firstname", revenue.ClientID);
-            ViewBag.RegisteredUserID = new SelectList(db.RegisteredUsers, "ID", "Firstname", revenue.RegisteredUserID);
-
-            return View(revenue);
+            ViewBag.RevenueID = new SelectList(db.Revenues, "ID", "ID", revenueCategory.RevenueID);
+            return View(revenueCategory);
         }
 
-        // GET: Revenues/Edit/5
+        // GET: RevenueCategories/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Revenue revenue = db.Revenues.Find(id);
-            if (revenue == null)
+            RevenueCategory revenueCategory = db.RevenueCategories.Find(id);
+            if (revenueCategory == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ClientID = new SelectList(db.Clients, "ID", "Firstname", revenue.ClientID);
-            ViewBag.RegisteredUserID = new SelectList(db.RegisteredUsers, "ID", "Firstname", revenue.RegisteredUserID);
-            return View(revenue);
+            ViewBag.RevenueID = new SelectList(db.Revenues, "ID", "ID", revenueCategory.RevenueID);
+            return View(revenueCategory);
         }
 
-        // POST: Revenues/Edit/5
+        // POST: RevenueCategories/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Total,Date,RegisteredUserID,ClientID")] Revenue revenue)
+        public ActionResult Edit([Bind(Include = "ID,Name,Total,RevenueID")] RevenueCategory revenueCategory)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(revenue).State = EntityState.Modified;
+                db.Entry(revenueCategory).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ClientID = new SelectList(db.Clients, "ID", "Firstname", revenue.ClientID);
-            ViewBag.RegisteredUserID = new SelectList(db.RegisteredUsers, "ID", "Firstname", revenue.RegisteredUserID);
-            return View(revenue);
+            ViewBag.RevenueID = new SelectList(db.Revenues, "ID", "ID", revenueCategory.RevenueID);
+            return View(revenueCategory);
         }
 
-        // GET: Revenues/Delete/5
+        // GET: RevenueCategories/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Revenue revenue = db.Revenues.Find(id);
-            if (revenue == null)
+            RevenueCategory revenueCategory = db.RevenueCategories.Find(id);
+            if (revenueCategory == null)
             {
                 return HttpNotFound();
             }
-            return View(revenue);
+            return View(revenueCategory);
         }
 
-        // POST: Revenues/Delete/5
+        // POST: RevenueCategories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Revenue revenue = db.Revenues.Find(id);
-            db.Revenues.Remove(revenue);
+            RevenueCategory revenueCategory = db.RevenueCategories.Find(id);
+            db.RevenueCategories.Remove(revenueCategory);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

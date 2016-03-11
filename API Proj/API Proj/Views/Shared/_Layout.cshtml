@@ -23,6 +23,9 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Exp", "Index", "Expenses")</li>
+                    <li>@Html.ActionLink("Rev", "Index", "Revenues")</li>
+                    <li>@Html.ActionLink("expCat", "Index", "ExpenseCategories")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
@@ -34,6 +37,20 @@
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                <input type="hidden" name="cmd" value="_xclick">
+                <input type="hidden" name="business" value="FV4B7XP9MNKSN">
+                <input type="hidden" name="lc" value="US">
+                <input type="hidden" name="amount" value="1.00">
+                <input type="hidden" name="currency_code" value="USD">
+                <input type="hidden" name="return" value="http://localhost:18097/">
+                <input type="hidden" name="cbt" value="Return to MyPage.com" src="http://localhost:18097/">
+                <input type="hidden" name="button_subtype" value="services">
+                <input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynowCC_LG.gif:NonHosted">
+                <input type="image" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                <img alt="" border="0" src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+            </form>
+
         </footer>
     </div>
 

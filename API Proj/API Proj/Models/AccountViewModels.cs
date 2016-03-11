@@ -102,7 +102,7 @@ namespace API_Proj.Models
 
         [Required]
         [Display(Name = "Zipcode")]
-        public string AddressZipcode { get; set; }
+        public int AddressZipcode { get; set; }
     }
 
     public class ResetPasswordViewModel

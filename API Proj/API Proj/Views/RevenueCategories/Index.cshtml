@@ -1,4 +1,4 @@
-﻿@model IEnumerable<API_Proj.Models.Expense>
+﻿@model IEnumerable<API_Proj.Models.RevenueCategory>
 
 @{
     ViewBag.Title = "Index";
@@ -12,16 +12,13 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.RegisteredUser.Firstname)
+            @Html.DisplayNameFor(model => model.Revenue.ID)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Payee)
+            @Html.DisplayNameFor(model => model.Name)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Total)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Date)
         </th>
         <th></th>
     </tr>
@@ -29,16 +26,13 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.RegisteredUser.Firstname)
+            @Html.DisplayFor(modelItem => item.Revenue.ID)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Payee)
+            @Html.DisplayFor(modelItem => item.Name)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Total)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Date)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |

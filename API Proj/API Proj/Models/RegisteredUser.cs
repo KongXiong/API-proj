@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
-using System.ComponentModel.DataAnnotations;
-
 
 namespace API_Proj.Models
 {
-    public class Client
+    public class RegisteredUser
     {
-
         public int ID { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
@@ -17,11 +16,9 @@ namespace API_Proj.Models
         public string City { get; set; }
         public string State { get; set; }
         public int ZipCode { get; set; }
-
-        [EmailAddress]
-        public string Email { get; set; }
-        public string RegisteredUserID { get; set; }
-        public virtual RegisteredUser RegisteredUser { get; set; }
+        public string UserID { get; set; }
+        public virtual ApplicationUser User { get; set; }
+        
 
     }
 }

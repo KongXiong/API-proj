@@ -17,7 +17,8 @@ namespace API_Proj.Controllers
         // GET: Expenses
         public ActionResult Index()
         {
-            return View(db.Expenses.ToList());
+            var expenses = db.Expenses.Include(e => e.RegisteredUser);
+            return View(expenses.ToList());
         }
 
         // GET: Expenses/Details/5
@@ -38,6 +39,7 @@ namespace API_Proj.Controllers
         // GET: Expenses/Create
         public ActionResult Create()
         {
+            ViewBag.RegisteredUserID = new SelectList(db.RegisteredUsers, "ID", "Firstname");
             return View();
         }
 
@@ -46,7 +48,7 @@ namespace API_Proj.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Payee,Total,CategoryID,Date")] Expense expense)
+        public ActionResult Create([Bind(Include = "ID,Payee,Total,Date,RegisteredUserID")] Expense expense)
         {
             if (ModelState.IsValid)
             {
@@ -55,6 +57,7 @@ namespace API_Proj.Controllers
                 return RedirectToAction("Index");
             }
 
+            ViewBag.RegisteredUserID = new SelectList(db.RegisteredUsers, "ID", "Firstname", expense.RegisteredUserID);
             return View(expense);
         }
 
@@ -70,6 +73,7 @@ namespace API_Proj.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.RegisteredUserID = new SelectList(db.RegisteredUsers, "ID", "Firstname", expense.RegisteredUserID);
             return View(expense);
         }
 
@@ -78,7 +82,7 @@ namespace API_Proj.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Payee,Total,CategoryID,Date")] Expense expense)
+        public ActionResult Edit([Bind(Include = "ID,Payee,Total,Date,RegisteredUserID")] Expense expense)
         {
             if (ModelState.IsValid)
             {
@@ -86,6 +90,7 @@ namespace API_Proj.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.RegisteredUserID = new SelectList(db.RegisteredUsers, "ID", "Firstname", expense.RegisteredUserID);
             return View(expense);
         }
 
