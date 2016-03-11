@@ -14,7 +14,6 @@ namespace API_Proj.Models
         public int ID { get; set; }
         public string Name { get; set; }
         public float Total { get; set; }
-        public int ExpenseID { get; set; }
-        public virtual Expense Expense { get; set; }
+
     }
 }

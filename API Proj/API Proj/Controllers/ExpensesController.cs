@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using API_Proj.Models;
+using Microsoft.AspNet.Identity;
 
 namespace API_Proj.Controllers
 {
@@ -40,6 +41,9 @@ namespace API_Proj.Controllers
         public ActionResult Create()
         {
             ViewBag.RegisteredUserID = new SelectList(db.RegisteredUsers, "ID", "Firstname");
+            ViewBag.ExpenseCategoryID = new SelectList(db.ExpenseCategories, "ID", "Name");
+            ViewBag.RegisteredUserID = User.Identity.GetUserId();
+
             return View();
         }
 
@@ -48,10 +52,12 @@ namespace API_Proj.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Payee,Total,Date,RegisteredUserID")] Expense expense)
+        public ActionResult Create([Bind(Include = "ID,Payee,Total,Date,ExpenseCategoryID,RegisteredUserID")] Expense expense)
         {
             if (ModelState.IsValid)
             {
+                expense.RegisteredUserID = User.Identity.GetUserId();
+                ViewBag.ExpenseCategoryID = new SelectList(db.ExpenseCategories, "ID", "Name", expense.ExpenseCategoryID);
                 db.Expenses.Add(expense);
                 db.SaveChanges();
                 return RedirectToAction("Index");

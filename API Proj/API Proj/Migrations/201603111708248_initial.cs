@@ -3,7 +3,7 @@ namespace API_Proj.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Initial : DbMigration
+    public partial class initial : DbMigration
     {
         public override void Up()
         {
@@ -19,35 +19,12 @@ namespace API_Proj.Migrations
                         State = c.String(),
                         ZipCode = c.Int(nullable: false),
                         Email = c.String(),
-                    })
-                .PrimaryKey(t => t.ID);
-            
-            CreateTable(
-                "dbo.ExpenseCategories",
-                c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        Name = c.String(),
-                        Total = c.Single(nullable: false),
-                        ExpenseID = c.Int(nullable: false),
+                        RegisteredUserID = c.String(),
+                        RegisteredUser_ID = c.Int(),
                     })
                 .PrimaryKey(t => t.ID)
-                .ForeignKey("dbo.Expenses", t => t.ExpenseID, cascadeDelete: true)
-                .Index(t => t.ExpenseID);
-            
-            CreateTable(
-                "dbo.Expenses",
-                c => new
-                    {
-                        ID = c.Int(nullable: false, identity: true),
-                        Payee = c.String(),
-                        Total = c.Double(nullable: false),
-                        Date = c.DateTime(nullable: false),
-                        RegisteredUserID = c.Int(nullable: false),
-                    })
-                .PrimaryKey(t => t.ID)
-                .ForeignKey("dbo.RegisteredUsers", t => t.RegisteredUserID, cascadeDelete: true)
-                .Index(t => t.RegisteredUserID);
+                .ForeignKey("dbo.RegisteredUsers", t => t.RegisteredUser_ID)
+                .Index(t => t.RegisteredUser_ID);
             
             CreateTable(
                 "dbo.RegisteredUsers",
@@ -125,17 +102,42 @@ namespace API_Proj.Migrations
                 .Index(t => t.RoleId);
             
             CreateTable(
+                "dbo.ExpenseCategories",
+                c => new
+                    {
+                        ID = c.Int(nullable: false, identity: true),
+                        Name = c.String(),
+                        Total = c.Single(nullable: false),
+                    })
+                .PrimaryKey(t => t.ID);
+            
+            CreateTable(
+                "dbo.Expenses",
+                c => new
+                    {
+                        ID = c.Int(nullable: false, identity: true),
+                        Payee = c.String(),
+                        Total = c.Double(nullable: false),
+                        Date = c.DateTime(nullable: false),
+                        RegisteredUserID = c.String(),
+                        ExpenseCategoryID = c.Int(nullable: false),
+                        RegisteredUser_ID = c.Int(),
+                    })
+                .PrimaryKey(t => t.ID)
+                .ForeignKey("dbo.RevenueCategories", t => t.ExpenseCategoryID, cascadeDelete: true)
+                .ForeignKey("dbo.RegisteredUsers", t => t.RegisteredUser_ID)
+                .Index(t => t.ExpenseCategoryID)
+                .Index(t => t.RegisteredUser_ID);
+            
+            CreateTable(
                 "dbo.RevenueCategories",
                 c => new
                     {
                         ID = c.Int(nullable: false, identity: true),
                         Name = c.String(),
                         Total = c.Single(nullable: false),
-                        RevenueID = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => t.ID)
-                .ForeignKey("dbo.Revenues", t => t.RevenueID, cascadeDelete: true)
-                .Index(t => t.RevenueID);
+                .PrimaryKey(t => t.ID);
             
             CreateTable(
                 "dbo.Revenues",
@@ -144,14 +146,18 @@ namespace API_Proj.Migrations
                         ID = c.Int(nullable: false, identity: true),
                         Total = c.Double(nullable: false),
                         Date = c.DateTime(nullable: false),
-                        RegisteredUserID = c.Int(nullable: false),
+                        RegisteredUserID = c.String(),
                         ClientID = c.Int(),
+                        RevenueCategoryID = c.Int(nullable: false),
+                        RegisteredUser_ID = c.Int(),
                     })
                 .PrimaryKey(t => t.ID)
                 .ForeignKey("dbo.Clients", t => t.ClientID)
-                .ForeignKey("dbo.RegisteredUsers", t => t.RegisteredUserID, cascadeDelete: true)
-                .Index(t => t.RegisteredUserID)
-                .Index(t => t.ClientID);
+                .ForeignKey("dbo.RegisteredUsers", t => t.RegisteredUser_ID)
+                .ForeignKey("dbo.RevenueCategories", t => t.RevenueCategoryID, cascadeDelete: true)
+                .Index(t => t.ClientID)
+                .Index(t => t.RevenueCategoryID)
+                .Index(t => t.RegisteredUser_ID);
             
             CreateTable(
                 "dbo.AspNetRoles",
@@ -168,37 +174,39 @@ namespace API_Proj.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.RevenueCategories", "RevenueID", "dbo.Revenues");
-            DropForeignKey("dbo.Revenues", "RegisteredUserID", "dbo.RegisteredUsers");
+            DropForeignKey("dbo.Revenues", "RevenueCategoryID", "dbo.RevenueCategories");
+            DropForeignKey("dbo.Revenues", "RegisteredUser_ID", "dbo.RegisteredUsers");
             DropForeignKey("dbo.Revenues", "ClientID", "dbo.Clients");
-            DropForeignKey("dbo.ExpenseCategories", "ExpenseID", "dbo.Expenses");
-            DropForeignKey("dbo.Expenses", "RegisteredUserID", "dbo.RegisteredUsers");
+            DropForeignKey("dbo.Expenses", "RegisteredUser_ID", "dbo.RegisteredUsers");
+            DropForeignKey("dbo.Expenses", "ExpenseCategoryID", "dbo.RevenueCategories");
+            DropForeignKey("dbo.Clients", "RegisteredUser_ID", "dbo.RegisteredUsers");
             DropForeignKey("dbo.RegisteredUsers", "UserID", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
+            DropIndex("dbo.Revenues", new[] { "RegisteredUser_ID" });
+            DropIndex("dbo.Revenues", new[] { "RevenueCategoryID" });
             DropIndex("dbo.Revenues", new[] { "ClientID" });
-            DropIndex("dbo.Revenues", new[] { "RegisteredUserID" });
-            DropIndex("dbo.RevenueCategories", new[] { "RevenueID" });
+            DropIndex("dbo.Expenses", new[] { "RegisteredUser_ID" });
+            DropIndex("dbo.Expenses", new[] { "ExpenseCategoryID" });
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.RegisteredUsers", new[] { "UserID" });
-            DropIndex("dbo.Expenses", new[] { "RegisteredUserID" });
-            DropIndex("dbo.ExpenseCategories", new[] { "ExpenseID" });
+            DropIndex("dbo.Clients", new[] { "RegisteredUser_ID" });
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.Revenues");
             DropTable("dbo.RevenueCategories");
+            DropTable("dbo.Expenses");
+            DropTable("dbo.ExpenseCategories");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
             DropTable("dbo.RegisteredUsers");
-            DropTable("dbo.Expenses");
-            DropTable("dbo.ExpenseCategories");
             DropTable("dbo.Clients");
         }
     }

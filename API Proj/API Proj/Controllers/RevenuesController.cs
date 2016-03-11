@@ -19,6 +19,9 @@ namespace API_Proj.Controllers
         public ActionResult Index()
         {
             var revenues = db.Revenues.Include(r => r.Client).Include(r => r.RegisteredUser);
+            var test = revenues.ToList();
+            ViewBag.intArray = test;
+
             return View(revenues.ToList());
         }
 
@@ -41,9 +44,10 @@ namespace API_Proj.Controllers
         public ActionResult Create()
         {
             ViewBag.ClientID = new SelectList(db.Clients, "ID", "Firstname");
+            ViewBag.RevenueCategoryID = new SelectList(db.RevenueCategories, "ID", "Name");
 
 
-            ViewBag.RegisteredUserID = User.Identity.GetUserId();
+            //ViewBag.RegisteredUserID = User.Identity.GetUserId();
             //ViewBag.RegisteredUserID = 1;
             return View();
         }
@@ -53,24 +57,24 @@ namespace API_Proj.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Total,Date,RegisteredUserID,ClientID")] Revenue revenue)
+        public ActionResult Create([Bind(Include = "ID,Total,Date,RegisteredUserID,RevenueCategoryID,ClientID")] Revenue revenue)
         {
             if (ModelState.IsValid)
             {
                 //var thing = revenue.RegisteredUserID;
                 //var UserID = Convert.ToInt32(User.Identity.GetUserId().Single());
                 //var foo = db.RegisteredUsers.Where(x => x.ID == UserID);
-
                 //revenue.RegisteredUserID = ViewBag.RegisteredUserID;
                 revenue.RegisteredUserID = User.Identity.GetUserId();
+            ViewBag.ClientID = new SelectList(db.Clients, "ID", "Firstname", revenue.ClientID);
+            ViewBag.RevenueCategoryID = new SelectList(db.RevenueCategories, "ID", "Name", revenue.RevenueCategoryID);
                 
                 db.Revenues.Add(revenue);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ClientID = new SelectList(db.Clients, "ID", "Firstname", revenue.ClientID);
-            ViewBag.RegisteredUserID = new SelectList(db.RegisteredUsers, "ID", "Firstname", revenue.RegisteredUserID);
+            //ViewBag.RegisteredUserID = new SelectList(db.RegisteredUsers, "ID", "Firstname", revenue.RegisteredUserID);
 
             return View(revenue);
         }

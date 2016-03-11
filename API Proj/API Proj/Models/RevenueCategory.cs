@@ -10,8 +10,5 @@ namespace API_Proj.Models
         public int ID { get; set; }
         public string Name { get; set; }
         public float Total { get; set; }
-
-        public int RevenueID { get; set; }
-        public virtual Revenue Revenue { get; set; }
     }
 }

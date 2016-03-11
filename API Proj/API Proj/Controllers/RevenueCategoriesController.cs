@@ -17,8 +17,7 @@ namespace API_Proj.Controllers
         // GET: RevenueCategories
         public ActionResult Index()
         {
-            var revenueCategories = db.RevenueCategories.Include(r => r.Revenue);
-            return View(revenueCategories.ToList());
+            return View(db.RevenueCategories.ToList());
         }
 
         // GET: RevenueCategories/Details/5
@@ -39,7 +38,6 @@ namespace API_Proj.Controllers
         // GET: RevenueCategories/Create
         public ActionResult Create()
         {
-            ViewBag.RevenueID = new SelectList(db.Revenues, "ID", "ID");
             return View();
         }
 
@@ -48,29 +46,15 @@ namespace API_Proj.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name,Total,RevenueID")] RevenueCategory revenueCategory)
+        public ActionResult Create([Bind(Include = "ID,Name,Total")] RevenueCategory revenueCategory)
         {
             if (ModelState.IsValid)
             {
-                var revId = revenueCategory.Revenue.ID;
-
-    //            var user = db.Users.Where(u => u.ID == id)
-    //.Select(u => new {
-    //    ID = u.ID,
-    //    FirstName = u.FirstName,
-    //    LastName = u.LastName,
-    //    FotherName = u.FotherName
-    //}).Single();
-
-
-
-                revenueCategory.RevenueID = revenueCategory.Revenue.ID;
                 db.RevenueCategories.Add(revenueCategory);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.RevenueID = new SelectList(db.Revenues, "ID", "ID", revenueCategory.RevenueID);
             return View(revenueCategory);
         }
 
@@ -86,7 +70,6 @@ namespace API_Proj.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.RevenueID = new SelectList(db.Revenues, "ID", "ID", revenueCategory.RevenueID);
             return View(revenueCategory);
         }
 
@@ -95,7 +78,7 @@ namespace API_Proj.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,Total,RevenueID")] RevenueCategory revenueCategory)
+        public ActionResult Edit([Bind(Include = "ID,Name,Total")] RevenueCategory revenueCategory)
         {
             if (ModelState.IsValid)
             {
@@ -103,7 +86,6 @@ namespace API_Proj.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.RevenueID = new SelectList(db.Revenues, "ID", "ID", revenueCategory.RevenueID);
             return View(revenueCategory);
         }
 

@@ -17,8 +17,7 @@ namespace API_Proj.Controllers
         // GET: ExpenseCategories
         public ActionResult Index()
         {
-            var expenseCategories = db.ExpenseCategories.Include(e => e.Expense);
-            return View(expenseCategories.ToList());
+            return View(db.ExpenseCategories.ToList());
         }
 
         // GET: ExpenseCategories/Details/5
@@ -39,7 +38,6 @@ namespace API_Proj.Controllers
         // GET: ExpenseCategories/Create
         public ActionResult Create()
         {
-            ViewBag.ExpenseID = new SelectList(db.Expenses, "ID", "Payee");
             return View();
         }
 
@@ -48,7 +46,7 @@ namespace API_Proj.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name,Total,ExpenseID")] ExpenseCategory expenseCategory)
+        public ActionResult Create([Bind(Include = "ID,Name,Total")] ExpenseCategory expenseCategory)
         {
             if (ModelState.IsValid)
             {
@@ -57,7 +55,6 @@ namespace API_Proj.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ExpenseID = new SelectList(db.Expenses, "ID", "Payee", expenseCategory.ExpenseID);
             return View(expenseCategory);
         }
 
@@ -73,7 +70,6 @@ namespace API_Proj.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ExpenseID = new SelectList(db.Expenses, "ID", "Payee", expenseCategory.ExpenseID);
             return View(expenseCategory);
         }
 
@@ -82,7 +78,7 @@ namespace API_Proj.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,Total,ExpenseID")] ExpenseCategory expenseCategory)
+        public ActionResult Edit([Bind(Include = "ID,Name,Total")] ExpenseCategory expenseCategory)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +86,6 @@ namespace API_Proj.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ExpenseID = new SelectList(db.Expenses, "ID", "Payee", expenseCategory.ExpenseID);
             return View(expenseCategory);
         }
 
